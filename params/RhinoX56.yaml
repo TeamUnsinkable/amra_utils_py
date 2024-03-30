@@ -1,0 +1,7 @@
+{
+  "/joy": {
+    "type": 1,
+    "index": 0,
+    "topic": "/joy/ch0"
+  }
+}
