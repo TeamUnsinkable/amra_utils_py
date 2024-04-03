@@ -1,0 +1,18 @@
+launch:
+
+- node:
+    pkg: "amra_utils_py"
+    exec: "vectornav_translator"
+    name: "translator"
+    namespace: "vectornav/translated"
+    
+    #remap:
+    #-
+    #    from: ""
+    #    to: ""
+    #
+- node:
+    pkg: "vectornav"
+    exec: "vectornav"
+    name: "vectornav_node"
+    namespace: ""
