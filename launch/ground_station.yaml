@@ -30,7 +30,10 @@ launch:
       - 
         name: "autorepeat_rate"
         value: 10.0
-      
+      - 
+        name: "deadzone"
+        value: 0.1
+        
 # Joy Controller - Throttle
 - node:
       pkg: "joy"
