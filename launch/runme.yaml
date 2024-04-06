@@ -6,13 +6,30 @@ launch:
     name: "translator"
     namespace: "vectornav/translated"
     
-    #remap:
-    #-
-    #    from: ""
-    #    to: ""
-    #
+
+- node:
+    pkg: "pid_control"
+    exec: "pid_controller"
+    name: "pid_x_controller"
+    namespace: "control/x"
+    arg:
+      - name: "Ki"
+        value: "100"
+      - name: "Kp"
+        value: "200"
+      - name: "Kd"
+        value: "400"
+      - name: "plant_topic"
+        value: "/vectornav/translated/attitude/x"
+
 - node:
     pkg: "vectornav"
     exec: "vectornav"
     name: "vectornav_node"
     namespace: ""
+    arg:
+      - name: 'port'
+        value: 'dev/ttyUSB0'
+      - name: 'baud'
+        value: '115200'
+

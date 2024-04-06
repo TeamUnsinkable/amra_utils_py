@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             "joy_translator = amra_utils_py.joystick_translator:main",
+            "joy_actuator = amra_utils_py.joystick_actuator:main",
             "vectornav_translator = amra_utils_py.vectornav_translator:main"
         ],
     },
