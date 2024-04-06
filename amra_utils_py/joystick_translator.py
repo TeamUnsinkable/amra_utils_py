@@ -2,10 +2,11 @@
 
 # Python Modules
 from amra_utils_py.helpers import process_yaml_input
+from amra_utils_msgs.msg import JoyIndex
+
 # ROS Modules
 import rclpy
 from rclpy.node import Node
-from rclpy.executors import SingleThreadedExecutor
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Float32
 
@@ -37,20 +38,22 @@ class JoyTranslator(Node):
     """
     def createPublishers(self) -> None:
         for btn in self.buttons:
-            btn.update({"publisher": self.create_publisher(Float32, btn["joystick_topic"], 5)})
+            btn.update({"publisher": self.create_publisher(JoyIndex, btn["joystick_topic"], 5)})
         for axs in self.axes:
-            axs.update({"publisher": self.create_publisher(Float32, axs["joystick_topic"], 5)})
+            axs.update({"publisher": self.create_publisher(JoyIndex, axs["joystick_topic"], 5)})
     
     def updateInputs(self, message: Joy) -> None:
-        value = Float32()
+        value = JoyIndex()
         
         for btn in self.buttons:
             channel = btn["index"]
+            value.idx = channel
             value.data = message.buttons[channel]
             btn["publisher"].publish(value)
 
         for axs in self.axes:
             channel = axs["index"]
+            value.idx = channel
             value.data = message.axes[channel]
             axs["publisher"].publish(value)
     

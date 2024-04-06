@@ -5,6 +5,7 @@ from rclpy.node import Node, Publisher
 from std_msgs.msg import Float32
 
 from amra_utils_py.helpers import process_yaml_input 
+from amra_utils_msgs.msg import JoyIndex
 
 class JoyActuator(Node):
     def __init__(self,):
@@ -25,9 +26,9 @@ class JoyActuator(Node):
     def createSubscribers(self):
         #TODO: RE_WRITE SUBSCRIPTION LOGIC
         for btn in self.buttons:
-            btn.update({"subscriber":self.create_subscription(Float32, btn['joystick_topic'], lambda msg: self.commonCallback(msg, btn), 10)})
+            btn.update({"subscriber":self.create_subscription(JoyIndex, btn['joystick_topic'], self.commonBtnCallback, 10)})
         for axs in self.axes:
-            axs.update({"subscriber":self.create_subscription(Float32, axs['joystick_topic'], lambda msg: self.commonCallback(msg, axs), 10)})
+            axs.update({"subscriber":self.create_subscription(JoyIndex, axs['joystick_topic'], self.commonAxsCallback, 10)})
     
     def createPublishers(self):
         for btn in self.buttons:
@@ -35,10 +36,38 @@ class JoyActuator(Node):
         for axs in self.axes:
             axs.update({"publisher": self.create_publisher(Float32, axs['dest_topic'], 10)})
     
-    def commonCallback(self, msg: Float32, pub):
+    def commonBtnCallback(self, msg: JoyIndex):
         value = Float32()
+
         value.data = msg.data*400
-        pub["publisher"].publish(value)
+
+        for btn in self.buttons:
+            if btn['index'] == msg.idx:
+                break
+
+        # Check if exhaused
+        if btn['index'] != msg.idx:
+            self.get_logger().warning("Could not find channel index")
+            return
+        
+        btn["publisher"].publish(value)
+
+    def commonAxsCallback(self, msg: JoyIndex):
+        value = Float32()
+
+        value.data = msg.data*400
+
+        for axs in self.axes:
+            if axs['index'] == msg.idx:
+                break
+
+        # Check if exhaused
+        if axs['index'] != msg.idx:
+            self.get_logger().warning("Could not find channel index")
+            return
+
+        axs["publisher"].publish(value)
+
 
 def main():
     rclpy.init()
