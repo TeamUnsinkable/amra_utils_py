@@ -19,13 +19,12 @@
       description: "Pitch"
       dest_topic: "/controls/pitch/hotas"
 
-2:
+0:
   GUID: "03000c35380700002122000011010000" # Rhino X56 Throttle
   topic_base: "/joy/throttle"
   mapping:
     - type: 1
       index: 0
       description: "Depth"
-    - type: 0
-      index: 32
-      description: "Arm + Disarm"
+      dest_topic: "/controls/depth/hotas"
+

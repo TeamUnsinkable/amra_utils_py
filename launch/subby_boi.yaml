@@ -1,0 +1,13 @@
+launch:
+# JMotor Control
+  - node:
+      pkg: "pololu_motor_control"
+      exec: "controller_node"
+      name: "PololuMotorController"
+    
+      param:
+      - 
+        name: 'port'
+        value: "/dev/tty/ACM0"
+
+      

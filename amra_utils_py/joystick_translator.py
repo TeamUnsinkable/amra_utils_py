@@ -5,6 +5,7 @@ from amra_utils_py.helpers import process_yaml_input
 # ROS Modules
 import rclpy
 from rclpy.node import Node
+from rclpy.executors import SingleThreadedExecutor
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Float32
 
@@ -17,12 +18,13 @@ class JoyTranslator(Node):
         super().__init__("JoystickTranslator")
         self.declare_parameter("config_path", "src/amra_utils_py/params/RhinoX56.yaml")
         self.declare_parameter("config_key", 1)
-        self.topic_base = '/input/stick'
+        self.declare_parameter("joystick_in", "/joy")
+        topic_name = self.get_parameter('joystick_in').get_parameter_value().string_value
 
         # Single param of key, from yaml master file
         # 1, 2 etc
         # use respective bindings
-        topic_name = "/joy{}".format(self.get_parameter("config_key").get_parameter_value().integer_value)
+   
         self.buttons, self.axes = process_yaml_input(self.get_parameter("config_path").get_parameter_value().string_value, self.get_parameter("config_key").get_parameter_value().integer_value)
         self.joy_pub = self.create_subscription(Joy, topic_name, self.updateInputs, 10)
 
