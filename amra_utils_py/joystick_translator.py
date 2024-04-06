@@ -1,8 +1,9 @@
-#!/usr/bin/bash
+#!/usr/bin/python3
 
+# Python Modules
+from amra_utils_py.helpers import process_yaml_input
+# ROS Modules
 import rclpy
-import os
-import json
 from rclpy.node import Node
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Float32
@@ -15,13 +16,18 @@ class JoyTranslator(Node):
     def __init__(self) -> None:
         super().__init__("JoystickTranslator")
         self.declare_parameter("config_path", "src/amra_utils_py/params/RhinoX56.yaml")
-        self.declare_parameter("device", 0)
+        self.declare_parameter("config_key", 1)
+        self.topic_base = '/input/stick'
 
-        topic_name = self.process_yaml_input(self.get_parameter("config_path").get_parameter_value()._string_value)
+        # Single param of key, from yaml master file
+        # 1, 2 etc
+        # use respective bindings
+        topic_name = "/joy{}".format(self.get_parameter("config_key").get_parameter_value().integer_value)
+        self.buttons, self.axes = process_yaml_input(self.get_parameter("config_path").get_parameter_value().string_value, self.get_parameter("config_key").get_parameter_value().integer_value)
         self.joy_pub = self.create_subscription(Joy, topic_name, self.updateInputs, 10)
 
         self.createPublishers()
-        print()
+        self.get_logger().info("Publishing Inputs")
 
     """
     \breif Creats publishers and appends it to parameter
@@ -29,48 +35,27 @@ class JoyTranslator(Node):
     """
     def createPublishers(self) -> None:
         for btn in self.buttons:
-            topic_name = btn["data"]["topic"]
-            btn["data"]["publisher"] = self.create_publisher(Float32, topic_name, 5)
-
+            btn.update({"publisher": self.create_publisher(Float32, btn["joystick_topic"], 5)})
         for axs in self.axes:
-            topic_name = axs["data"]["topic"]
-            axs["data"]["publisher"] = self.create_publisher(Float32, topic_name, 5)
+            axs.update({"publisher": self.create_publisher(Float32, axs["joystick_topic"], 5)})
     
     def updateInputs(self, message: Joy) -> None:
+        value = Float32()
         
         for btn in self.buttons:
-            channel = btn["data"]["index"]
-            value = Float32()
+            channel = btn["index"]
             value.data = message.buttons[channel]
-            btn["data"]["publisher"].publish(Float32(value))
+            btn["publisher"].publish(value)
 
         for axs in self.axes:
-            channel = axs["data"]["index"]
-            value = Float32()
+            channel = axs["index"]
             value.data = message.axes[channel]
-            axs["data"]["publisher"].publish(value)
+            axs["publisher"].publish(value)
     
-    def process_yaml_input(self, yaml_data_path):
-        self.buttons = []
-        self.axes = []
-        print(os.getcwd())
-        print(os.path.join(os.getcwd(), yaml_data_path))
-        #TODO: Fix path completion
-        with open(os.path.join(os.getcwd(), yaml_data_path), 'r') as book:
-            yaml_data = book.read()
-      
-        yaml_data = json.loads(yaml_data)
+    """
+    \return Returns a python object with keys joystick_topic, index, dest_topic
+    """
 
-        for id, attributes in yaml_data.items():
-            data = {'index': attributes['index'], 'topic': attributes['topic']}
-            entry = {"topic_in": id, "data": data}
-
-            if attributes['type'] == 0:
-                self.buttons.append(entry)
-            elif attributes['type'] == 1:
-                self.axes.append(entry)
-            
-        return id
 
 def main():
     rclpy.init()

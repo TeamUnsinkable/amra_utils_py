@@ -13,5 +13,19 @@
       "index": 2,
       "description": "lateral"
     }
-  }
+  },
+  
+  "GUID2": 
+  {
+    {
+      "type": 1,
+      "index": 0,
+      "description": "Arming"
+    },
+    {
+      "type": 1,
+      "index": 2,
+      "description": "lateral"
+    }
+  },
 }
