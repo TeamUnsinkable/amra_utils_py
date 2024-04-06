@@ -13,6 +13,6 @@ launch:
 - node:
     pkg: "pololu_motor_control"
     exec: "ardusub_translator"
-    name: "AruduSub Translator"
+    name: "AruduSubTranslator"
 
       
