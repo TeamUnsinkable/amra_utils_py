@@ -7,12 +7,12 @@ launch:
     param:
     - 
       name: 'port'
-      value: "/dev/tty/ACM0"
+      value: "/dev/ttyACM0"
 
 # Ardusub Translator
 - node:
     pkg: "pololu_motor_control"
     exec: "ardusub_translator"
     name: "AruduSub Translator"
-    
+
       
