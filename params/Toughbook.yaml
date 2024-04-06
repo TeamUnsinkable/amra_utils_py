@@ -1,0 +1,48 @@
+# 0 = Button
+# 1 = Axis 
+1: 
+{
+  "GUID": "03000c35380700002122000011010000", #Rhino X56 Joystick
+  "topic": "/joy/joystick", 
+  "mapping" :{
+    {  
+      "type": 1, 
+      "index": 0, 
+      "description": "Left + Right"
+    },
+    {
+      "type": 1,
+      "index": 1,
+      "description": "Forward + Back"
+    },
+    {
+      "type": 1,
+      "index": 4,
+      "description": "Yaw"
+    },
+    {
+      "type": 1,
+      "index": 3,
+      "description": "Pitch"
+    
+    },
+  } 
+}
+
+2: 
+{
+  "GUID": "03000c35380700002122000011010000",  #Rhino X56 Throttle
+  "topic": "/joy/throttle",
+  "mapping" : 
+    {
+      "type": 1, 
+      "index": 0, 
+      "description": "Depth"
+    },
+    {
+      "type": 0,
+      "index": 32,
+      "description": "Arm + Disarm"
+    },
+  
+}
