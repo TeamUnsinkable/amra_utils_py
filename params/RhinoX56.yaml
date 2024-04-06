@@ -1,7 +1,17 @@
+# 0 = Button
+# 1 = Slider
 {
-  "/joy": {
-    "type": 1,
-    "index": 0,
-    "topic": "/joy/ch0"
+  "GUID": 
+  {
+    {
+      "type": 1,
+      "index": 0,
+      "description": "Arming"
+    },
+    {
+      "type": 1,
+      "index": 2,
+      "description": "lateral"
+    }
   }
 }
