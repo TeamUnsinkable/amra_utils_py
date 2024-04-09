@@ -23,7 +23,9 @@ setup(
         'console_scripts': [
             "joy_translator = amra_utils_py.joystick_translator:main",
             "joy_actuator = amra_utils_py.joystick_actuator:main",
-            "vectornav_translator = amra_utils_py.vectornav_translator:main"
+            "vectornav_translator = amra_utils_py.vectornav_translator:main",
+            "video_streamer = amra_utils_py.video_streamer:main",
+            "video_viewer = amra_utils_py.video_reciever:main"
         ],
     },
 )
