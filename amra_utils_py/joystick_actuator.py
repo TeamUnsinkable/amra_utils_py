@@ -55,7 +55,7 @@ class JoyActuator(Node):
     def commonAxsCallback(self, msg: JoyIndex):
         value = Float32()
 
-        value.data = msg.data*400
+        value.data = round(msg.data,2)*400
 
         for axs in self.axes:
             if axs['index'] == msg.idx:
