@@ -13,7 +13,7 @@
   <test_depend>python3-pytest</test_depend>
 
   <depend>std_msgs</depend>
-  <depend>amra_utils_msgs</depend>
+  <!-- depend>amra_utils_msgs</depend-->
   
 
   <export>
