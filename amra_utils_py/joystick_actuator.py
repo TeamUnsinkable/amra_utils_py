@@ -2,6 +2,7 @@
 import rclpy
 from rclpy import logging
 from rclpy.node import Node, Publisher
+from rclpy.callback_groups import ReentrantCallbackGroup
 from std_msgs.msg import Float32
 
 from amra_utils_py.helpers import process_yaml_input 
@@ -12,7 +13,7 @@ class JoyActuator(Node):
         super().__init__("JoystickActuator")
         self.declare_parameter("config_path", "src/amra_utils_py/params/RhinoX56.yaml")
         self.declare_parameter("config_key", 1)
-        
+        self.cb_group = ReentrantCallbackGroup()
         # Get parameters for buttons and axes
         # joystick_topic, index, dest_topic
         self.buttons, self.axes = process_yaml_input(self.get_parameter("config_path").get_parameter_value().string_value, self.get_parameter("config_key").get_parameter_value().integer_value)
@@ -26,15 +27,15 @@ class JoyActuator(Node):
     def createSubscribers(self):
         #TODO: RE_WRITE SUBSCRIPTION LOGIC
         for btn in self.buttons:
-            btn.update({"subscriber":self.create_subscription(JoyIndex, btn['joystick_topic'], self.commonBtnCallback, 10)})
+            btn.update({"subscriber":self.create_subscription(JoyIndex, btn['joystick_topic'], self.commonBtnCallback, 10, callback_group=self.cb_group)})
         for axs in self.axes:
-            axs.update({"subscriber":self.create_subscription(JoyIndex, axs['joystick_topic'], self.commonAxsCallback, 10)})
+            axs.update({"subscriber":self.create_subscription(JoyIndex, axs['joystick_topic'], self.commonAxsCallback, 10, callback_group=self.cb_group)})
     
     def createPublishers(self):
         for btn in self.buttons:
-            btn.update({"publisher": self.create_publisher(Float32, btn['dest_topic'], 10)})
+            btn.update({"publisher": self.create_publisher(Float32, btn['dest_topic'], 10, callback_group=self.cb_group)})
         for axs in self.axes:
-            axs.update({"publisher": self.create_publisher(Float32, axs['dest_topic'], 10)})
+            axs.update({"publisher": self.create_publisher(Float32, axs['dest_topic'], 10, callback_group=self.cb_group)})
     
     def commonBtnCallback(self, msg: JoyIndex):
         value = Float32()

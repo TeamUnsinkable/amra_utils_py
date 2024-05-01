@@ -7,6 +7,7 @@ from amra_utils_msgs.msg import JoyIndex
 # ROS Modules
 import rclpy
 from rclpy.node import Node
+from rclpy.callback_groups import ReentrantCallbackGroup
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Float32
 
@@ -21,6 +22,7 @@ class JoyTranslator(Node):
         self.declare_parameter("config_key", 1)
         self.declare_parameter("joystick_in", "/joy")
         topic_name = self.get_parameter('joystick_in').get_parameter_value().string_value
+        self.cb_group = ReentrantCallbackGroup()
 
         # Single param of key, from yaml master file
         # 1, 2 etc
@@ -38,9 +40,9 @@ class JoyTranslator(Node):
     """
     def createPublishers(self) -> None:
         for btn in self.buttons:
-            btn.update({"publisher": self.create_publisher(JoyIndex, btn["joystick_topic"], 5)})
+            btn.update({"publisher": self.create_publisher(JoyIndex, btn["joystick_topic"], 7, callback_group=self.cb_group)})
         for axs in self.axes:
-            axs.update({"publisher": self.create_publisher(JoyIndex, axs["joystick_topic"], 5)})
+            axs.update({"publisher": self.create_publisher(JoyIndex, axs["joystick_topic"], 7, callback_group=self.cb_group)})
     
     def updateInputs(self, message: Joy) -> None:
         value = JoyIndex()
