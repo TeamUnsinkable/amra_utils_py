@@ -13,6 +13,8 @@ class JoyActuator(Node):
         super().__init__("JoystickActuator")
         self.declare_parameter("config_path", "src/amra_utils_py/params/RhinoX56.yaml")
         self.declare_parameter("config_key", 1)
+        self.declare_parameter("deadband", 0.15)
+        self.deadband = self.get_parameter("deadband").get_parameter_value().double_value
         self.cb_group = ReentrantCallbackGroup()
         # Get parameters for buttons and axes
         # joystick_topic, index, dest_topic
@@ -51,6 +53,20 @@ class JoyActuator(Node):
             self.get_logger().warning("Could not find channel index")
             return
         
+        # Check if value is within limits
+        try:
+            factor = 1+self.deadband
+            if (msg.data > msg.data * factor) or (msg.data < msg.data * factor):
+                # Value is out of bounds, quit callback
+                return
+            btn["last_value"] = msg.data
+
+        # First time through, set inital last value
+        except KeyError:
+            self.get_logger().warn("")
+            btn.update({"last_value": msg.data})
+
+        # Check if number is erratic, +- X% different, denoted by parameter deadband 
         btn["publisher"].publish(value)
 
     def commonAxsCallback(self, msg: JoyIndex):
