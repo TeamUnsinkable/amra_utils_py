@@ -7,7 +7,7 @@ from amra_utils_msgs.msg import JoyIndex
 # ROS Modules
 import rclpy
 from rclpy.node import Node
-from rclpy.callback_groups import ReentrantCallbackGroup
+from rclpy.callback_groups import ReentrantCallbackGroup, MutuallyExclusiveCallbackGroup
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Float32
 
@@ -21,15 +21,15 @@ class JoyTranslator(Node):
         self.declare_parameter("config_path", "src/amra_utils_py/params/RhinoX56.yaml")
         self.declare_parameter("config_key", 1)
         self.declare_parameter("joystick_in", "/joy")
-        topic_name = self.get_parameter('joystick_in').get_parameter_value().string_value
-        self.cb_group = ReentrantCallbackGroup()
+        topic_name = self.get_parameter(name='joystick_in').get_parameter_value().string_value
+        self.cb_group = MutuallyExclusiveCallbackGroup()
 
         # Single param of key, from yaml master file
         # 1, 2 etc
         # use respective bindings
    
-        self.buttons, self.axes = process_yaml_input(self.get_parameter("config_path").get_parameter_value().string_value, self.get_parameter("config_key").get_parameter_value().integer_value)
-        self.joy_pub = self.create_subscription(Joy, topic_name, self.updateInputs, 10)
+        self.buttons, self.axes = process_yaml_input(self.get_parameter("config_path").get_parameter_value().string_value, self.get_parameter("config_key").get_parameter_value().integer_value) # type: ignore
+        self.joy_pub = self.create_subscription(Joy, topic_name, self.updateInputs, 10, callback_group=self.cb_group)
 
         self.createPublishers()
         self.get_logger().info("Publishing Inputs")
@@ -40,9 +40,9 @@ class JoyTranslator(Node):
     """
     def createPublishers(self) -> None:
         for btn in self.buttons:
-            btn.update({"publisher": self.create_publisher(JoyIndex, btn["joystick_topic"], 7, callback_group=self.cb_group)})
+            btn.update({"publisher": self.create_publisher(JoyIndex, btn["joystick_topic"], 10)})
         for axs in self.axes:
-            axs.update({"publisher": self.create_publisher(JoyIndex, axs["joystick_topic"], 7, callback_group=self.cb_group)})
+            axs.update({"publisher": self.create_publisher(JoyIndex, axs["joystick_topic"], 10)})
     
     def updateInputs(self, message: Joy) -> None:
         value = JoyIndex()
