@@ -1,6 +1,9 @@
 import os
 import yaml
 
+from rclpy.node import Node
+from std_msgs.msg import Header
+
 def process_yaml_input(yaml_data_path, config_key):
     buttons = []
     axes = []
@@ -25,3 +28,9 @@ def process_yaml_input(yaml_data_path, config_key):
             parameter['joystick_topic'] = "{}/axs{}".format(entry['topic_base'], config["index"])
             axes.append(parameter)
     return buttons, axes
+
+def generate_header(node: Node) -> Header:
+        head = Header()
+        head.stamp = node.get_clock().now()
+        return head
+
