@@ -15,9 +15,7 @@ launch:
 # Joy Controller - Stick
 - node:
       pkg: "joy"
-      exec: "joy_node"
-      name: "hotas_stick_node"
-      namespace: "joy"
+
       remap:
       -
         from: "/joy/joy"
@@ -53,73 +51,3 @@ launch:
         name: "autorepeat_rate"
         value: 20.0
 
-# Joy Translator - Stick
-- node:
-      pkg: "amra_utils_py"
-      exec: "joy_translator"
-      name: "JoyTranslatorStick"
-      namespace: "joy"
-
-      param:
-      -       
-        name: 'config_path'
-        value: "$(var hotas_config_path)"
-      - 
-        name: "config_key"
-        value: "$(var stick_id)"
-      - 
-        name: "joystick_in"
-        value: "/joy/joystick"
-      
-# Joy Translator - Throttle
-- node:
-      pkg: "amra_utils_py"
-      exec: "joy_translator"
-      name: "JoyTranslatorThrottle"
-      namespace: "joy"
-
-      param:
-      - 
-        name: 'config_path'
-        value: "$(var hotas_config_path)"
-      - 
-        name: "config_key"
-        value: "$(var throttle_id)"
-      - 
-        name: "joystick_in"
-        value: "/joy/throttle"
-      
-
-# Joy Actuator - Stick
-- node:
-      pkg: "amra_utils_py"
-      exec: "joy_actuator"
-      name: "JoyActuatorStick"
-      namespace: "joy"
-
-      param:
-      - 
-        name: 'config_path'
-        value: "$(var hotas_config_path)"
-      - 
-        name: "config_key"
-        value: "$(var stick_id)"
-      - 
-        name: "deadband"
-        value: 0.15
-
-# Joy Actuator - Throttle
-- node:
-      pkg: "amra_utils_py"
-      exec: "joy_actuator"
-      name: "JoyActuatorThrottle"
-      namespace: "joy"
-
-      param:
-      - 
-        name: 'config_path'
-        value: "$(var hotas_config_path)"
-      - 
-        name: "config_key"
-        value: "$(var throttle_id)"
-      
