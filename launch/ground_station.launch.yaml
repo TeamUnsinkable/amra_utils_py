@@ -29,7 +29,7 @@ launch:
         value: "$(var stick_id)"
       - 
         name: "autorepeat_rate"
-        value: 10.0
+        value: 20.0
       - 
         name: "deadzone"
         value: 0.1
@@ -51,7 +51,7 @@ launch:
         value: "$(var throttle_id)"
       - 
         name: "autorepeat_rate"
-        value: 10.0
+        value: 20.0
 
 # Joy Translator - Stick
 - node:
