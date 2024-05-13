@@ -104,6 +104,9 @@ launch:
       - 
         name: "config_key"
         value: "$(var stick_id)"
+      - 
+        name: "deadband"
+        value: 0.15
 
 # Joy Actuator - Throttle
 - node:

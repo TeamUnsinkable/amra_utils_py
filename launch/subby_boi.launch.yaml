@@ -14,3 +14,6 @@ launch:
     pkg: "pololu_motor_control"
     exec: "ardusub_translator"
     name: "AruduSubTranslator"
+    - 
+      name: 'rate'
+      value: 20
