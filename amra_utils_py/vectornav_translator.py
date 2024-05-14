@@ -10,11 +10,11 @@ class VectornavTranslator(Node):
     def __init__(self):
         super().__init__('VectornavTranslator')
         self.cb_group = ReentrantCallbackGroup()
-        self.common_x_pub = self.create_publisher(Float32, "/vectornav/translated/attitude/x", 10, callback_group=self.cb_group)
-        self.common_y_pub = self.create_publisher(Float32, "/vectornav/translated/attitude/y", 10, callback_group=self.cb_group)
-        self.common_z_pub = self.create_publisher(Float32, "/vectornav/translated/attitude/z", 10, callback_group=self.cb_group)
+        self.common_x_pub = self.create_publisher(Float32, "vectornav/translated/attitude/x", 10, callback_group=self.cb_group)
+        self.common_y_pub = self.create_publisher(Float32, "vectornav/translated/attitude/y", 10, callback_group=self.cb_group)
+        self.common_z_pub = self.create_publisher(Float32, "vectornav/translated/attitude/z", 10, callback_group=self.cb_group)
 
-        self.create_subscription(CommonGroup, "/vectornav/raw/common", self.recv_common, 10)
+        self.create_subscription(CommonGroup, "vectornav/raw/common", self.recv_common, 10)
         self.get_logger().warning("Spun up and spitting messages")
 
     def recv_common(self, message: CommonGroup) -> None:
