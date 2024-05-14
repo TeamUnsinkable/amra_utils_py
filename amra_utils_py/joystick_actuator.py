@@ -4,7 +4,7 @@ from rclpy import logging
 from rclpy.node import Node, Publisher
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
-from std_msgs.msg import Float32
+from std_msgs.msg import Float64
 
 from amra_utils_py.helpers import process_yaml_input 
 from amra_utils_msgs.msg import JoyIndex
@@ -15,7 +15,9 @@ class JoyActuator(Node):
         self.declare_parameter("config_path", "src/amra_utils_py/params/RhinoX56.yaml")
         self.declare_parameter("config_key", 1)
         self.declare_parameter("deadband", 0.15)
+        self.declare_parameter("scaling_factor", 400.0)
         self.deadband = self.get_parameter("deadband").get_parameter_value().double_value
+        self.scaling_factor = self.get_parameter("scaling_factor").get_parameter_value().double_value
         self.cb_group = ReentrantCallbackGroup()
         # Get parameters for buttons and axes
         # joystick_topic, index, dest_topic
@@ -31,20 +33,26 @@ class JoyActuator(Node):
         #TODO: RE_WRITE SUBSCRIPTION LOGIC
         for btn in self.buttons:
             btn.update({"subscriber":self.create_subscription(JoyIndex, btn['joystick_topic'], self.commonBtnCallback, 10)})
+            
         for axs in self.axes:
             axs.update({"subscriber":self.create_subscription(JoyIndex, axs['joystick_topic'], self.commonAxsCallback, 10)})
-    
+            
+
     def createPublishers(self):
+        self.axs_pubs = {}
+        self.btn_pubs = {}
         for btn in self.buttons:
-            btn.update({"publisher": self.create_publisher(Float32, btn['dest_topic'], 10)})
+            self.btn_pubs.update( {btn["index"]: {"publisher": self.create_publisher(Float64, btn['dest_topic'], 10)} } )
         for axs in self.axes:
-            axs.update({"publisher": self.create_publisher(Float32, axs['dest_topic'], 10)})
+            self.axs_pubs.update( {axs["index"]: {"publisher": self.create_publisher(Float64, axs['dest_topic'], 10)} } )
+        #self._logger.warn(self.axs_pubs)
     
     def commonBtnCallback(self, msg: JoyIndex):
-        value = Float32()
+        value = Float64()
 
         value.data = msg.data*400
 
+        ## RE-WRITE SEARCH
         for btn in self.buttons:
             if btn['index'] == msg.idx:
                 break
@@ -53,6 +61,13 @@ class JoyActuator(Node):
         if btn['index'] != msg.idx:
             self.get_logger().warning("Could not find channel index")
             return
+
+        try:
+            btn = self.btn_pubs[msg.idx]
+        except KeyError:
+            self.get_logger().warning("Could not find channel index")
+            return
+
         
         # Check if value is within limits
         try:
@@ -71,14 +86,13 @@ class JoyActuator(Node):
         btn["publisher"].publish(value)
 
     def commonAxsCallback(self, msg: JoyIndex):
-        value = Float32()
-        value.data = round(msg.data,2)*400
-        for axs in self.axes:
-            if axs['index'] == msg.idx:
-                break
-
-        # Check if exhaused
-        if axs['index'] != msg.idx:
+        value = Float64()
+        value.data = msg.data*self.scaling_factor
+        
+        try:
+            axs = self.axs_pubs[msg.idx]
+            self._logger.warn(f"Publishing {msg.idx}: from: {msg.data} got: {msg.data*self.scaling_factor}")
+        except KeyError:
             self.get_logger().warning("Could not find channel index")
             return
         
@@ -93,6 +107,7 @@ class JoyActuator(Node):
             self.get_logger().debug(f"Got {exp} Value:{msg.data}; Upper: {( axs['last_value'] * (1+self.deadband) )}; Lower: { axs['last_value'] * (1-self.deadband)}")
             if ( msg.data > ( axs["last_value"] * (1+self.deadband) ) ) and ( msg.data < ( axs["last_value"] * (1-self.deadband) ) ) :
                 # Value is out of bounds, quit callback
+                self._logger.debug(f"Axis {msg.idx} is out of margin")
                 return
             axs["last_value"] = msg.data
 
