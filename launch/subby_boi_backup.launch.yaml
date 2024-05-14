@@ -1,0 +1,28 @@
+launch:
+
+- arg:
+    name: "stick_id"
+    default: "1"
+- arg:
+    name: "throttle_id"
+    default: "0"
+        
+# Motor Control
+- node:
+    pkg: "pololu_motor_control"
+    exec: "controller_node"
+    name: "PololuMotorController"
+    param:
+    - 
+      name: 'port'
+      value: "/dev/ttyACM1"
+
+# Ardusub Translator
+- node:
+    pkg: "pololu_motor_control"
+    exec: "ardusub_translator"
+    name: "AruduSubTranslator"
+    param:
+    - 
+      name: 'rate'
+      value: 20
