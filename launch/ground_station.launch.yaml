@@ -15,7 +15,9 @@ launch:
 # Joy Controller - Stick
 - node:
       pkg: "joy"
-
+      exec: "joy_node"
+      name: "hotas_joystick_node"
+      namespace: "joy"
       remap:
       -
         from: "/joy/joy"
@@ -51,3 +53,106 @@ launch:
         name: "autorepeat_rate"
         value: 20.0
 
+# Joy Translator - Stick
+- node:
+      pkg: "amra_utils_py"
+      exec: "joy_translator"
+      name: "JoyTranslatorStick"
+      namespace: "joy"
+
+      param:
+      -       
+        name: 'config_path'
+        value: "$(var hotas_config_path)"
+      - 
+        name: "config_key"
+        value: "$(var stick_id)"
+      - 
+        name: "joystick_in"
+        value: "/joy/joystick"
+      
+# Joy Translator - Throttle
+- node:
+      pkg: "amra_utils_py"
+      exec: "joy_translator"
+      name: "JoyTranslatorThrottle"
+      namespace: "joy"
+
+      param:
+      - 
+        name: 'config_path'
+        value: "$(var hotas_config_path)"
+      - 
+        name: "config_key"
+        value: "$(var throttle_id)"
+      - 
+        name: "joystick_in"
+        value: "/joy/throttle"
+      
+
+# Joy Actuator - Stick
+- node:
+      pkg: "amra_utils_py"
+      exec: "joy_actuator"
+      name: "JoyActuatorStick"
+      namespace: "joy"
+
+      param:
+      - 
+        name: 'config_path'
+        value: "$(var hotas_config_path)"
+      - 
+        name: "config_key"
+        value: "$(var stick_id)"
+      - 
+        name: "deadband"
+        value: 0.18
+      - 
+        name: "scaling_factor"
+        value: 1.0
+
+# Joy Actuator - Throttle
+- node:
+      pkg: "amra_utils_py"
+      exec: "joy_actuator"
+      name: "JoyActuatorThrottle"
+      namespace: "joy"
+
+      param:
+      - 
+        name: 'config_path'
+        value: "$(var hotas_config_path)"
+      - 
+        name: "config_key"
+        value: "$(var throttle_id)"
+      - 
+        name: "scaling_factor"
+        value: 1.0
+
+- node:
+      pkg: "pid_control"
+      exec: "controller"
+      name: "SurgePID"
+      namespace: "/controls/surge"
+      param:
+      -
+        name: "Ki"
+        value: 1.0
+      -
+        name: "Kp"
+        value: 1.0
+      -
+        name: "Kd"
+        value: 1.0
+      - 
+        name: "upper_limit"
+        value: 400.0
+      - 
+        name: "lower_limit"
+        value: -400.0
+      - 
+        name: "setpoint_topic"
+        value: "hotas"
+      - 
+        name: "topic_from_plant"
+        value: "/sensors/vectornav/translated/x"

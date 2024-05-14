@@ -8,6 +8,13 @@ launch:
     default: "0"
 
 
+# Launch the vectornav
+- group:
+    - push-ros-namespace:
+        namespace: "sensor"
+    - include:
+        file: "$(find-pkg-share vectornav)/launch/vectornav.launch.py"
+        
 # Motor Control
 - node:
     pkg: "pololu_motor_control"
@@ -23,77 +30,13 @@ launch:
     pkg: "pololu_motor_control"
     exec: "ardusub_translator"
     name: "AruduSubTranslator"
+    param:
     - 
       name: 'rate'
       value: 20
 
-# Joy Translator - Stick
 - node:
-      pkg: "amra_utils_py"
-      exec: "joy_translator"
-      name: "JoyTranslatorStick"
-      namespace: "joy"
-
-      param:
-      -       
-        name: 'config_path'
-        value: "$(var hotas_config_path)"
-      - 
-        name: "config_key"
-        value: "$(var stick_id)"
-      - 
-        name: "joystick_in"
-        value: "/joy/joystick"
-      
-# Joy Translator - Throttle
-- node:
-      pkg: "amra_utils_py"
-      exec: "joy_translator"
-      name: "JoyTranslatorThrottle"
-      namespace: "joy"
-
-      param:
-      - 
-        name: 'config_path'
-        value: "$(var hotas_config_path)"
-      - 
-        name: "config_key"
-        value: "$(var throttle_id)"
-      - 
-        name: "joystick_in"
-        value: "/joy/throttle"
-      
-
-# Joy Actuator - Stick
-- node:
-      pkg: "amra_utils_py"
-      exec: "joy_actuator"
-      name: "JoyActuatorStick"
-      namespace: "joy"
-
-      param:
-      - 
-        name: 'config_path'
-        value: "$(var hotas_config_path)"
-      - 
-        name: "config_key"
-        value: "$(var stick_id)"
-      - 
-        name: "deadband"
-        value: 0.15
-
-# Joy Actuator - Throttle
-- node:
-      pkg: "amra_utils_py"
-      exec: "joy_actuator"
-      name: "JoyActuatorThrottle"
-      namespace: "joy"
-
-      param:
-      - 
-        name: 'config_path'
-        value: "$(var hotas_config_path)"
-      - 
-        name: "config_key"
-        value: "$(var throttle_id)"
-      
+    pkg: "amra_utils_py"
+    exec: "vectornav_translator"
+    name: "VectornavTranslator"
+    namespace: "sensor"
