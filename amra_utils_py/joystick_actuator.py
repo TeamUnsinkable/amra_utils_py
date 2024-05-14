@@ -91,7 +91,7 @@ class JoyActuator(Node):
         
         try:
             axs = self.axs_pubs[msg.idx]
-            self._logger.warn(f"Publishing {msg.idx}: from: {msg.data} got: {msg.data*self.scaling_factor}")
+            #self._logger.warn(f"Publishing {msg.idx}: from: {msg.data} got: {msg.data*self.scaling_factor}")
         except KeyError:
             self.get_logger().warning("Could not find channel index")
             return
