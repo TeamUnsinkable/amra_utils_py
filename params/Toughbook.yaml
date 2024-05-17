@@ -7,17 +7,21 @@
       description: "Left + Right"
       dest_topic: "/controls/sway/hotas"
     - type: 1
-      index: 1
+      index: 4
       description: "Forward + Back"
       dest_topic: "/controls/surge/hotas"
     - type: 1
-      index: 4
+      index: 1
       description: "Yaw"
       dest_topic: "/controls/yaw/hotas"
     - type: 1
       index: 3
       description: "Pitch"
       dest_topic: "/controls/pitch/hotas"
+    - type: 1
+      index: 2
+      description: "Roll"
+      dest_topic: "/controls/roll/hotas"
 
 0:
   GUID: "03000c35380700002122000011010000" # Rhino X56 Throttle
