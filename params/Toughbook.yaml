@@ -13,15 +13,15 @@
     - type: 1
       index: 1
       description: "Yaw"
-      dest_topic: "/controls/yaw/hotas"
+      dest_topic: "/controls/yaw/control_effort"
     - type: 1
       index: 3
       description: "Pitch"
-      dest_topic: "/controls/pitch/hotas"
+      dest_topic: "/controls/pitch/control_effort"
     - type: 1
       index: 2
       description: "Roll"
-      dest_topic: "/controls/roll/hotas"
+      dest_topic: "/controls/roll/control_effort"
 
 0:
   GUID: "03000c35380700002122000011010000" # Rhino X56 Throttle
