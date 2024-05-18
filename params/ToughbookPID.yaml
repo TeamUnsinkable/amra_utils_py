@@ -1,0 +1,34 @@
+1:
+  GUID: "03000c35380700002122000011010000" # Rhino X56 Joystick
+  topic_base: "/joy/joystick"
+  mapping:
+    - type: 1
+      index: 0
+      description: "Left + Right"
+      dest_topic: "/controls/sway/hotas"
+    - type: 1
+      index: 4
+      description: "Forward + Back"
+      dest_topic: "/controls/surge/hotas"
+    - type: 1
+      index: 1
+      description: "Yaw"
+      dest_topic: "/controls/yaw/setpoint"
+    - type: 1
+      index: 3
+      description: "Pitch"
+      dest_topic: "/controls/pitch/setpoint"
+    - type: 1
+      index: 2
+      description: "Roll"
+      dest_topic: "/controls/roll/setpoint"
+
+0:
+  GUID: "03000c35380700002122000011010000" # Rhino X56 Throttle
+  topic_base: "/joy/throttle"
+  mapping:
+    - type: 1
+      index: 0
+      description: "Depth"
+      dest_topic: "/controls/depth/hotas"
+

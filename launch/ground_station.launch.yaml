@@ -2,7 +2,7 @@ launch:
 
 - arg:
     name: "hotas_config_path"
-    default: "/home/robosub/AMRA/dev_workspace/src/amra_utils_py/params/Toughbook.yaml"
+    default: "/home/robosub/AMRA/dev_workspace/src/amra_utils_py/params/ToughbookPID.yaml"
 - arg:
     name: "stick_id"
     default: "1"
@@ -132,8 +132,8 @@ launch:
 - node:
       pkg: "pid_control"
       exec: "controller"
-      name: "SurgePID"
-      namespace: "/controls/surge"
+      name: "RollPID"
+      namespace: "/controls/roll"
       param:
       -
         name: "Ki"
@@ -152,7 +152,64 @@ launch:
         value: -400.0
       - 
         name: "setpoint_topic"
-        value: "hotas"
+        value: "setpoint"
       - 
         name: "topic_from_plant"
-        value: "/sensors/vectornav/translated/x"
+        value: "/sensors/vectornav/translated/attitude/x"
+
+- node:
+      pkg: "pid_control"
+      exec: "controller"
+      name: "YawPID"
+      namespace: "/controls/yaw"
+      param:
+      -
+        name: "Ki"
+        value: 1.0
+      -
+        name: "Kp"
+        value: 1.0
+      -
+        name: "Kd"
+        value: 1.0
+      - 
+        name: "upper_limit"
+        value: 400.0
+      - 
+        name: "lower_limit"
+        value: -400.0
+      - 
+        name: "setpoint_topic"
+        value: "setpoint"
+      - 
+        name: "topic_from_plant"
+        value: "/sensors/vectornav/translated/attitude/z"
+
+- node:
+      pkg: "pid_control"
+      exec: "controller"
+      name: "PitchPID"
+      namespace: "/controls/pitch"
+      param:
+      -
+        name: "Ki"
+        value: 1.0
+      -
+        name: "Kp"
+        value: 1.0
+      -
+        name: "Kd"
+        value: 1.0
+      - 
+        name: "upper_limit"
+        value: 400.0
+      - 
+        name: "lower_limit"
+        value: -400.0
+      - 
+        name: "setpoint_topic"
+        value: "setpoint"
+      - 
+        name: "topic_from_plant"
+        value: "/sensors/vectornav/translated/attitude/y"
+
