@@ -31,4 +31,8 @@
       index: 0
       description: "Depth"
       dest_topic: "/controls/depth/hotas"
+    - type: 0
+      index: 0
+      description: "JawClose+Open"
+      dest_topic: "/controls/arm/jaws"
 
