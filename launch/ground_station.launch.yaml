@@ -2,7 +2,7 @@ launch:
 
 - arg:
     name: "hotas_config_path"
-    default: "/home/robosub/AMRA/dev_workspace/src/amra_utils_py/params/ToughbookPID.yaml"
+    default: "/home/robosub/AMRA/git_workspace/src/amra_utils_py/params/ToughbookPID.yaml"
 - arg:
     name: "stick_id"
     default: "1"
