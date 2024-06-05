@@ -34,5 +34,10 @@
     - type: 0
       index: 0
       description: "JawClose+Open"
-      dest_topic: "/controls/arm/jaws"
+      dest_topic: "/controls/arm/jawMove"
+    - type: 0
+      index: 32
+      description: "Jaw Direction Slider"
+      dest_topic: "/controls/arm/jawDir"
+
 
