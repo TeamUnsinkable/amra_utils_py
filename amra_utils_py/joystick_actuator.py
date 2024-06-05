@@ -5,7 +5,8 @@ from rclpy.node import Node, Publisher
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
 from std_msgs.msg import Float64
-
+from threading import Lock
+from time import sleep
 from amra_utils_py.helpers import process_yaml_input 
 from amra_utils_msgs.msg import JoyIndex
 
@@ -23,7 +24,7 @@ class JoyActuator(Node):
         # joystick_topic, index, dest_topic
         self.buttons, self.axes = process_yaml_input(self.get_parameter("config_path").get_parameter_value().string_value, self.get_parameter("config_key").get_parameter_value().integer_value) # type: ignore
         #self.get_logger().info(self.axes)
-
+        self.res_lock = Lock()
         self.createSubscribers()
         self.createPublishers()
         self.get_logger().info("Translating Joystick")
@@ -49,40 +50,27 @@ class JoyActuator(Node):
     
     def commonBtnCallback(self, msg: JoyIndex):
         value = Float64()
-
-        value.data = msg.data*400
-
-        ## RE-WRITE SEARCH
-        for btn in self.buttons:
-            if btn['index'] == msg.idx:
-                break
-
-        # Check if exhaused
-        if btn['index'] != msg.idx:
-            self.get_logger().warning("Could not find channel index")
-            return
+        value.data = msg.data
+        
+        self.get_logger().info(f"Got to btn:{msg.idx} with val:{msg.data}")
 
         try:
             btn = self.btn_pubs[msg.idx]
         except KeyError:
             self.get_logger().warning("Could not find channel index")
             return
-
         
-        # Check if value is within limits
+        # Check if value is the last
         try:
-            factor = 1+self.deadband
-            if (msg.data > msg.data * factor) or (msg.data < msg.data * factor):
-                # Value is out of bounds, quit callback
+            if btn["last_value"] == msg.data:
                 return
             btn["last_value"] = msg.data
-
         # First time through, set inital last value
         except KeyError:
             self.get_logger().warn("")
             btn.update({"last_value": msg.data})
-
-        # Check if number is erratic, +- X% different, denoted by parameter deadband 
+        
+        # Publish value
         btn["publisher"].publish(value)
 
     def commonAxsCallback(self, msg: JoyIndex):

@@ -50,7 +50,7 @@ class JoyTranslator(Node):
         for btn in self.buttons:
             channel = btn["index"]
             value.idx = channel
-            value.data = message.buttons[channel]
+            value.data = float(message.buttons[channel])
             btn["publisher"].publish(value)
 
         for axs in self.axes:
