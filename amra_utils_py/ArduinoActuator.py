@@ -9,19 +9,19 @@ class ArduinoSerialSender(Node):
         super().__init__('Arduino_serial_sender')
         self.subscription_direction = self.create_subscription(
             Float64,
-            '/controls/arm/jawDirection',
+            '/controls/arm/jawDir',
             self.listener_callback_direction,
             10)
         self.subscription_movement = self.create_subscription(
             Float64,
-            '/controls/arm/jawMovement',
+            '/controls/arm/jawMove',
             self.listener_callback_movement,
             10)
         
-        self.serial_port = serial.Serial('/dev/ttyACM3', 115200)
+        # self.serial_port = serial.Serial('/dev/ttyACM3', 115200)
         self.direction = 0
         self.movement = 0
-
+        self.get_logger().info("Arduino Serial node now screaming at Arduino.")
     def listener_callback_direction(self, msg):
         self.direction = msg.data
         self.send_to_arduino()
@@ -32,7 +32,8 @@ class ArduinoSerialSender(Node):
 
     def send_to_arduino(self):
         message = f'{self.direction},{self.movement}\n'
-        self.serial_port.write(message.encode())
+       # self.serial_port.write(message.encode())
+        self.get_logger().info(f'Sent {message}')
 
 def main(args=None):
     rclpy.init(args=args)

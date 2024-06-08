@@ -28,7 +28,7 @@ launch:
       value: 20
 # Arduino Trnsaltor
 - node:
-  pkg: "amra_utils_py"
-  exec: "ArduinoTranslator"
-  name: "ArduinoTranslator"
+    pkg: "amra_utils_py"
+    exec: "ArduinoThingy"
+    name: "ArduinoTranslator"
 
