@@ -40,3 +40,9 @@ launch:
     exec: "vectornav_translator"
     name: "VectornavTranslator"
     namespace: "sensor"
+# Arduino Translator
+- node:
+    pkg: "amra_utils_py"
+    exec: "ArduinoThingy"
+    name: "ArduinoTranslator"
+

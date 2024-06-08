@@ -155,7 +155,7 @@ launch:
         value: "setpoint"
       - 
         name: "topic_from_plant"
-        value: "/sensors/vectornav/translated/attitude/x"
+        value: "/sensor/vectornav/translated/attitude/x"
 
 - node:
       pkg: "pid_control"
@@ -183,7 +183,7 @@ launch:
         value: "setpoint"
       - 
         name: "topic_from_plant"
-        value: "/sensors/vectornav/translated/attitude/z"
+        value: "/sensor/vectornav/translated/attitude/z"
 
 - node:
       pkg: "pid_control"
@@ -211,5 +211,5 @@ launch:
         value: "setpoint"
       - 
         name: "topic_from_plant"
-        value: "/sensors/vectornav/translated/attitude/y"
+        value: "/sensor/vectornav/translated/attitude/y"
 
