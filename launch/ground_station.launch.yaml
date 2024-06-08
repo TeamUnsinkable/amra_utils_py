@@ -109,7 +109,7 @@ launch:
         value: 0.18
       - 
         name: "scaling_factor"
-        value: 1.0
+        value: 140.0
 
 # Joy Actuator - Throttle
 - node:
@@ -127,7 +127,7 @@ launch:
         value: "$(var throttle_id)"
       - 
         name: "scaling_factor"
-        value: 1.0
+        value: 180.0
 
 - node:
       pkg: "pid_control"
@@ -146,10 +146,10 @@ launch:
         value: 1.0
       - 
         name: "upper_limit"
-        value: 400.0
+        value: 150.0
       - 
         name: "lower_limit"
-        value: -400.0
+        value: -150.0
       - 
         name: "setpoint_topic"
         value: "setpoint"
@@ -174,10 +174,10 @@ launch:
         value: 1.0
       - 
         name: "upper_limit"
-        value: 400.0
+        value: 150.0
       - 
         name: "lower_limit"
-        value: -400.0
+        value: -150.0
       - 
         name: "setpoint_topic"
         value: "setpoint"
@@ -202,10 +202,10 @@ launch:
         value: 1.0
       - 
         name: "upper_limit"
-        value: 400.0
+        value: 150.0
       - 
         name: "lower_limit"
-        value: -400.0
+        value: -150.0
       - 
         name: "setpoint_topic"
         value: "setpoint"
