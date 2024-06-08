@@ -7,11 +7,11 @@
       description: "Left + Right"
       dest_topic: "/controls/sway/hotas"
     - type: 1
-      index: 4
+      index: 1
       description: "Forward + Back"
       dest_topic: "/controls/surge/hotas"
     - type: 1
-      index: 1
+      index: 4
       description: "Yaw"
       dest_topic: "/controls/yaw/setpoint"
     - type: 1
