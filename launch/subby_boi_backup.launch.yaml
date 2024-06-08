@@ -26,3 +26,9 @@ launch:
     - 
       name: 'rate'
       value: 20
+# Arduino Trnsaltor
+- node:
+    pkg: "amra_utils_py"
+    exec: "ArduinoThingy"
+    name: "ArduinoTranslator"
+

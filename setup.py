@@ -27,7 +27,8 @@ setup(
             "joy_actuator = amra_utils_py.joystick_actuator:main",
             "vectornav_translator = amra_utils_py.vectornav_translator:main",
             "video_streamer = amra_utils_py.video_streamer:main",
-            "video_viewer = amra_utils_py.video_reciever:main"
+            "video_viewer = amra_utils_py.video_reciever:main",
+            "ArduinoThingy = amra_utils_py.ArduinoActuator:main"
         ],
     },
 )
